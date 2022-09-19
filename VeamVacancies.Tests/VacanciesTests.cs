@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 using OpenQA.Selenium;
+using System.Reflection;
 using VeamVacancies.VeamVacancies.Domain.Drivers;
 using VeamVacancies.VeamVacancies.Domain.Pages;
 using static VeamVacancies.VeamVacancies.Domain.Locators.Locators;
@@ -98,7 +99,11 @@ namespace VeamVacancies.VeamVacancies.Tests
             if (TestContext.CurrentContext.Result.Outcome != ResultState.Success)
             {
                 var screenshot = ((ITakesScreenshot)vacanciesPage.GetDriver()).GetScreenshot();
-                screenshot.SaveAsFile($"D:\\Repos\\Veam\\VeamVacancies\\VeamVacancies.Domain\\Screenshots\\" +
+                string screenShotDir = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Screenshots\\");
+
+                if (!Directory.Exists(screenShotDir)) Directory.CreateDirectory(screenShotDir);
+
+                screenshot.SaveAsFile($"{screenShotDir}" +
                     $"screenshot-{DateTime.Now.ToString("yyyy-MM-dd-HHmmss")}.jpg", ScreenshotImageFormat.Jpeg);
             }
             veamDriver.GetDriver().Close();
